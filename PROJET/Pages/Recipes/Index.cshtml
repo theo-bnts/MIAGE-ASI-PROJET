@@ -10,28 +10,31 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Recipe[0].Name)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.Recipe)
+
+@foreach (var diet in Model.Diets.Where(d => d.RecipesCout > 0))
+{
+    <h2>@diet.Name</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipes[0].Name)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var recipeDiets in Model.RecipesDiets.Where(recipeDiets => recipeDiets.Value.Any(d => d.Id == diet.Id)))
     {
         <tr>
+            <td>@recipeDiets.Key.Name</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@recipeDiets.Key.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@recipeDiets.Key.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@recipeDiets.Key.Id">Delete</a>
             </td>
         </tr>
     }
     </tbody>
-</table>
+    </table>
+}
