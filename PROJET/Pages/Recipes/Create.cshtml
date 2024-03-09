@@ -24,11 +24,11 @@
                 <span asp-validation-for="Recipe.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="Diets" class="control-label">Diets</label>
-                @foreach (var diet in Model.AvailableDiets)
+                <label asp-for="Diets" class="control-label"></label>
+                @foreach (var diet in Model.Diets)
                 {
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="SelectedDiets" value="@diet.Id"/>
+                        <input class="form-check-input" type="checkbox" name="@Html.DisplayNameFor(model => model.SelectedDiets)" value="@diet.Id" />
                         <label class="form-check-label">@diet.Name</label>
                     </div>
                 }
