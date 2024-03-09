@@ -8,13 +8,13 @@ public class Diet
 
     [Required] public required string Name { get; set; }
 
-    public ICollection<Recipe>? Recipes { get; set; }
+    public IEnumerable<RecipeDiet>? RecipesDiet { get; set; }
 
     public int RecipesCout
     {
         get
         {
-            if (Recipes != null) return Recipes.Count;
+            if (RecipesDiet != null) return RecipesDiet.Count();
 
             return -1;
         }

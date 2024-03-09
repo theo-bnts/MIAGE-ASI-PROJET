@@ -12,5 +12,5 @@ public class Recipe
     [DataType(DataType.MultilineText)]
     public required string Description { get; set; }
 
-    public ICollection<Diet>? Diets { get; set; }
+    public IEnumerable<RecipeDiet>? RecipeDiets { get; set; }
 }

@@ -17,13 +17,31 @@ public class EditModel : PageModel
 
     [BindProperty] public Recipe Recipe { get; set; } = default!;
 
+    public List<Diet> Diets { get; set; } = default!;
+
+    [BindProperty] public required int[] SelectedDiets { get; set; }
+
     public async Task<IActionResult> OnGetAsync(int? id)
     {
-        if (id == null) return NotFound();
+        if (id == null)
+            return NotFound();
 
-        var recipe = await _context.Recipe.FirstOrDefaultAsync(m => m.Id == id);
-        if (recipe == null) return NotFound();
+        var recipe = await _context.Recipe
+            .Include(r => r.RecipeDiets)!
+            .ThenInclude(recipeDiet => recipeDiet.Diet)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (recipe == null)
+            return NotFound();
+
         Recipe = recipe;
+
+        Diets = _context.Diet.ToList();
+
+        SelectedDiets = Recipe.RecipeDiets!
+            .Select(rd => rd.DietId)
+            .ToArray();
+        
         return Page();
     }
 
@@ -31,7 +49,11 @@ public class EditModel : PageModel
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid) return Page();
+        if (!ModelState.IsValid)
+        {
+            Diets = _context.Diet.ToList();
+            return Page();
+        }
 
         _context.Attach(Recipe).State = EntityState.Modified;
 
@@ -45,6 +67,24 @@ public class EditModel : PageModel
                 return NotFound();
             throw;
         }
+        
+        var existingRecipeDiets = await _context.RecipeDiet
+            .Where(rd => rd.RecipeId == Recipe.Id)
+            .ToListAsync();
+
+        _context.RecipeDiet.RemoveRange(existingRecipeDiets);
+
+        foreach (var dietId in SelectedDiets)
+        {
+            var recipeDiet = new RecipeDiet
+            {
+                RecipeId = Recipe.Id,
+                DietId = dietId
+            };
+            _context.RecipeDiet.Add(recipeDiet);
+        }
+
+        await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");
     }

@@ -15,12 +15,14 @@ public class CreateModel : PageModel
     }
 
     [BindProperty] public Recipe Recipe { get; set; } = default!;
-    public required List<Diet> AvailableDiets { get; set; }
+
+    public required List<Diet> Diets { get; set; }
+
     [BindProperty] public required int[] SelectedDiets { get; set; }
 
     public IActionResult OnGet()
     {
-        AvailableDiets = _context.Diet.ToList();
+        Diets = _context.Diet.ToList();
         return Page();
     }
 
@@ -28,15 +30,13 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            AvailableDiets = _context.Diet.ToList(); // Re-fetch in case of invalid model state
+            Diets = _context.Diet.ToList();
             return Page();
         }
-
-        // Logic to add Recipe first
+        
         _context.Recipe.Add(Recipe);
         await _context.SaveChangesAsync();
-
-        // Handle selected diets
+        
         foreach (var dietId in SelectedDiets)
         {
             var recipeDiet = new RecipeDiet
@@ -46,7 +46,6 @@ public class CreateModel : PageModel
             };
             _context.RecipeDiet.Add(recipeDiet);
         }
-
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");

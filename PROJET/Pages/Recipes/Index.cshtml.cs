@@ -14,10 +14,29 @@ public class IndexModel : PageModel
         _context = context;
     }
 
-    public IList<Recipe> Recipe { get; set; } = default!;
+    public IList<Recipe> Recipes { get; set; } = default!;
+
+    public IList<Diet> Diets { get; set; } = default!;
+
+    public Dictionary<Recipe, List<Diet>> RecipesDiets { get; set; } = default!;
 
     public async Task OnGetAsync()
     {
-        Recipe = await _context.Recipe.ToListAsync();
+        Recipes = await _context.Recipe.ToListAsync();
+        
+        Diets = await _context.Diet
+            .Include(d => d.RecipesDiet)
+            .ToListAsync();
+
+        RecipesDiets = new Dictionary<Recipe, List<Diet>>();
+
+        foreach (var recipe in Recipes)
+        {
+            var diets = await _context.RecipeDiet
+                .Where(rd => rd.RecipeId == recipe.Id)
+                .Select(rd => rd.Diet)
+                .ToListAsync();
+            RecipesDiets.Add(recipe, diets);
+        }
     }
 }

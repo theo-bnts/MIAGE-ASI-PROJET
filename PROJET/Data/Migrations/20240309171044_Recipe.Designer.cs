@@ -12,8 +12,8 @@ using PROJET.Data;
 namespace PROJET.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240306180133_Initial")]
-    partial class Initial
+    [Migration("20240309171044_Recipe")]
+    partial class Recipe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,6 +227,62 @@ namespace PROJET.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PROJET.Model.Diet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Diet");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Recipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipe");
+                });
+
+            modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DietId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecipeId", "DietId");
+
+                    b.HasIndex("DietId");
+
+                    b.ToTable("RecipeDiet");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -276,6 +332,35 @@ namespace PROJET.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
+                {
+                    b.HasOne("PROJET.Model.Diet", "Diet")
+                        .WithMany("RecipesDiet")
+                        .HasForeignKey("DietId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PROJET.Model.Recipe", "Recipe")
+                        .WithMany("RecipeDiets")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Diet");
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Diet", b =>
+                {
+                    b.Navigation("RecipesDiet");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Recipe", b =>
+                {
+                    b.Navigation("RecipeDiets");
                 });
 #pragma warning restore 612, 618
         }

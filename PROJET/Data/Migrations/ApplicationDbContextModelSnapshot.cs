@@ -22,21 +22,6 @@ namespace PROJET.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DietRecipe", b =>
-                {
-                    b.Property<int>("DietsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DietsId", "RecipesId");
-
-                    b.HasIndex("RecipesId");
-
-                    b.ToTable("DietRecipe");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -279,40 +264,20 @@ namespace PROJET.Data.Migrations
 
             modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("RecipeId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DietId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RecipeId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("RecipeId", "DietId");
 
                     b.HasIndex("DietId");
 
-                    b.HasIndex("RecipeId");
-
                     b.ToTable("RecipeDiet");
-                });
-
-            modelBuilder.Entity("DietRecipe", b =>
-                {
-                    b.HasOne("PROJET.Model.Diet", null)
-                        .WithMany()
-                        .HasForeignKey("DietsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PROJET.Model.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -369,13 +334,13 @@ namespace PROJET.Data.Migrations
             modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
                 {
                     b.HasOne("PROJET.Model.Diet", "Diet")
-                        .WithMany()
+                        .WithMany("RecipesDiet")
                         .HasForeignKey("DietId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PROJET.Model.Recipe", "Recipe")
-                        .WithMany()
+                        .WithMany("RecipeDiets")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -383,6 +348,16 @@ namespace PROJET.Data.Migrations
                     b.Navigation("Diet");
 
                     b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Diet", b =>
+                {
+                    b.Navigation("RecipesDiet");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Recipe", b =>
+                {
+                    b.Navigation("RecipeDiets");
                 });
 #pragma warning restore 612, 618
         }
