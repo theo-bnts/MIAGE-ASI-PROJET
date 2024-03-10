@@ -30,7 +30,6 @@
     <ItemGroup>
         <Folder Include="Data\Migrations\"/>
         <Folder Include="Pages\Recipes\"/>
-        <Folder Include="Pages\Diets\"/>
     </ItemGroup>
 
 </Project>

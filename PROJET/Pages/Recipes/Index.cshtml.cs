@@ -22,9 +22,9 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Recipes = await _context.Recipe.ToListAsync();
+        Recipes = await _context.Recipes.ToListAsync();
         
-        Diets = await _context.Diet
+        Diets = await _context.Diets
             .Include(d => d.RecipesDiet)
             .ToListAsync();
 
@@ -32,7 +32,7 @@ public class IndexModel : PageModel
 
         foreach (var recipe in Recipes)
         {
-            var diets = await _context.RecipeDiet
+            var diets = await _context.RecipesDiets
                 .Where(rd => rd.RecipeId == recipe.Id)
                 .Select(rd => rd.Diet)
                 .ToListAsync();

@@ -26,9 +26,12 @@ public class CreateModel : PageModel
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid) return Page();
+        if (!ModelState.IsValid)
+        {
+            return OnGet();
+        }
 
-        _context.Diet.Add(Diet);
+        _context.Diets.Add(Diet);
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");

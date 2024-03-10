@@ -22,7 +22,7 @@ public class CreateModel : PageModel
 
     public IActionResult OnGet()
     {
-        Diets = _context.Diet.ToList();
+        Diets = _context.Diets.ToList();
         return Page();
     }
 
@@ -30,11 +30,10 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            Diets = _context.Diet.ToList();
-            return Page();
+            return OnGet();
         }
         
-        _context.Recipe.Add(Recipe);
+        _context.Recipes.Add(Recipe);
         await _context.SaveChangesAsync();
         
         foreach (var dietId in SelectedDiets)
@@ -44,7 +43,7 @@ public class CreateModel : PageModel
                 RecipeId = Recipe.Id,
                 DietId = dietId
             };
-            _context.RecipeDiet.Add(recipeDiet);
+            _context.RecipesDiets.Add(recipeDiet);
         }
         await _context.SaveChangesAsync();
 
