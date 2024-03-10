@@ -23,10 +23,11 @@ public class DetailsModel : PageModel
     {
         if (id == null) return NotFound();
 
-        var diet = await _context.Diet.FirstOrDefaultAsync(m => m.Id == id);
+        var diet = await _context.Diets.FirstOrDefaultAsync(m => m.Id == id);
         if (diet == null)
             return NotFound();
         Diet = diet;
+        
         return Page();
     }
 }

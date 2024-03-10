@@ -20,6 +20,6 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Diet = await _context.Diet.ToListAsync();
+        Diet = await _context.Diets.ToListAsync();
     }
 }

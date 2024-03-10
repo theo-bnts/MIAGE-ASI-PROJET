@@ -15,7 +15,7 @@ public class DetailsModel(ApplicationDbContext context) : PageModel
         if (id == null)
             return NotFound();
 
-        var recipe = await context.Recipe
+        var recipe = await context.Recipes
             .Include(r => r.RecipeDiets)!
             .ThenInclude(recipeDiet => recipeDiet.Diet)
             .FirstOrDefaultAsync(m => m.Id == id);

@@ -23,7 +23,7 @@ public class DeleteModel : PageModel
     {
         if (id == null) return NotFound();
 
-        var diet = await _context.Diet.FirstOrDefaultAsync(m => m.Id == id);
+        var diet = await _context.Diets.FirstOrDefaultAsync(m => m.Id == id);
 
         if (diet == null)
             return NotFound();
@@ -35,11 +35,11 @@ public class DeleteModel : PageModel
     {
         if (id == null) return NotFound();
 
-        var diet = await _context.Diet.FindAsync(id);
+        var diet = await _context.Diets.FindAsync(id);
         if (diet != null)
         {
             Diet = diet;
-            _context.Diet.Remove(Diet);
+            _context.Diets.Remove(Diet);
             await _context.SaveChangesAsync();
         }
 

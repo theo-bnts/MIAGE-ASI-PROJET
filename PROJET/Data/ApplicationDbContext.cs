@@ -4,13 +4,17 @@ using PROJET.Model;
 
 namespace PROJET.Data;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public DbSet<Diet> Diet { get; set; } = default!;
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; } = default!;
+    
+    public DbSet<Diet> Diets { get; set; } = default!;
 
-    public DbSet<Recipe> Recipe { get; set; } = default!;
+    public DbSet<Recipe> Recipes { get; set; } = default!;
 
-    public DbSet<RecipeDiet> RecipeDiet { get; set; } = default!;
+    public DbSet<RecipeDiet> RecipesDiets { get; set; } = default!;
+    
+    public DbSet<UserDiet> UsersDiets { get; set; } = default!;
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

@@ -23,7 +23,7 @@ public class EditModel : PageModel
     {
         if (id == null) return NotFound();
 
-        var diet = await _context.Diet.FirstOrDefaultAsync(m => m.Id == id);
+        var diet = await _context.Diets.FirstOrDefaultAsync(m => m.Id == id);
         if (diet == null) return NotFound();
         Diet = diet;
         return Page();
@@ -53,6 +53,6 @@ public class EditModel : PageModel
 
     private bool DietExists(int id)
     {
-        return _context.Diet.Any(e => e.Id == id);
+        return _context.Diets.Any(e => e.Id == id);
     }
 }
