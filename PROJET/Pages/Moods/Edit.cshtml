@@ -1,0 +1,48 @@
+﻿@page
+@model PROJET.Pages.Humeurs.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Humeur</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Humeur.Id" />
+            <div class="form-group">
+                <label>Choix Humeur :</label>
+                <!--<input asp-for="Humeur.Nom_Humeur" class="form-control" />-->
+                <select asp-for="Humeur.Name" class="form-control">
+                    <option value="">Choix humeur</option>
+                    <option value="Content">Content</option>
+                    <option value="Mitigé">Mitigé</option>
+                    <option value="Triste">Triste</option>
+                </select>
+
+                <span asp-validation-for="Humeur.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Date de l'humeur :</label>
+                <input type="date" asp-for="Humeur.Date" value="@ViewData["DateDuJour"]" class="form-control" />
+                <span asp-validation-for="Humeur.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <!--<label asp-for="Humeur.UtilisateurID" class="control-label"></label> -->
+                <input type="hidden" asp-for="Humeur.ApplicationUserId" class="form-control" value="@ViewData["LutilisateurID"]" />
+                <!-- <span asp-validation-for="Humeur.UtilisateurID" class="text-danger"></span> -->
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sauvegarder" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
