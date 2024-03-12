@@ -79,7 +79,7 @@ public class EditModel : PageModel
             .ToListAsync();
 
         _context.RecipesDiets.RemoveRange(existingRecipeDiets);
-
+        
         foreach (var dietId in SelectedDiets)
         {
             var recipeDiet = new RecipeDiet
