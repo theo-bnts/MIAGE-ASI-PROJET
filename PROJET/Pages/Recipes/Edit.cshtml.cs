@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +8,7 @@ using PROJET.Model;
 
 namespace PROJET.Pages.Recipes;
 
+[Authorize]
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
@@ -33,6 +36,9 @@ public class EditModel : PageModel
 
         if (recipe == null)
             return NotFound();
+        
+        if (!User.IsInRole("ADMINISTRATEUR") && recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            return Forbid();
 
         Recipe = recipe;
 
@@ -62,8 +68,9 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!RecipeExists(Recipe.Id))
+            if (!_context.Recipes.Any(r => r.Id == Recipe.Id))
                 return NotFound();
+            
             throw;
         }
         
@@ -86,10 +93,5 @@ public class EditModel : PageModel
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");
-    }
-
-    private bool RecipeExists(int id)
-    {
-        return _context.Recipes.Any(e => e.Id == id);
     }
 }

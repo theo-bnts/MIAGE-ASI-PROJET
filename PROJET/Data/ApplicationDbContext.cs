@@ -14,7 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<RecipeDiet> RecipesDiets { get; set; } = default!;
     
-    public DbSet<UserDiet> UsersDiets { get; set; } = default!;
+    public DbSet<ApplicationUserDiet> ApplicationUsersDiets { get; set; } = default!;
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

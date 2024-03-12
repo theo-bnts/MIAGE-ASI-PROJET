@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PROJET.Model;
 
-public class UserDiet
+public class ApplicationUserDiet
 {
     [Key] public int Id { get; set; }
     

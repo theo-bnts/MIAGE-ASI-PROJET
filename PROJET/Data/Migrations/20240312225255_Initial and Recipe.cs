@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PROJET.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Recipe : Migration
+    public partial class InitialandRecipe : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,7 +51,7 @@ namespace PROJET.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Diet",
+                name: "Diets",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -60,21 +60,7 @@ namespace PROJET.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Diet", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Recipe",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipe", x => x.Id);
+                    table.PrimaryKey("PK_Diets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,7 +170,54 @@ namespace PROJET.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeDiet",
+                name: "Recipes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recipes_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUsersDiets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DietId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUsersDiets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUsersDiets_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUsersDiets_Diets_DietId",
+                        column: x => x.DietId,
+                        principalTable: "Diets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecipesDiets",
                 columns: table => new
                 {
                     RecipeId = table.Column<int>(type: "int", nullable: false),
@@ -193,20 +226,30 @@ namespace PROJET.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeDiet", x => new { x.RecipeId, x.DietId });
+                    table.PrimaryKey("PK_RecipesDiets", x => new { x.RecipeId, x.DietId });
                     table.ForeignKey(
-                        name: "FK_RecipeDiet_Diet_DietId",
+                        name: "FK_RecipesDiets_Diets_DietId",
                         column: x => x.DietId,
-                        principalTable: "Diet",
+                        principalTable: "Diets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RecipeDiet_Recipe_RecipeId",
+                        name: "FK_RecipesDiets_Recipes_RecipeId",
                         column: x => x.RecipeId,
-                        principalTable: "Recipe",
+                        principalTable: "Recipes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUsersDiets_ApplicationUserId",
+                table: "ApplicationUsersDiets",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUsersDiets_DietId",
+                table: "ApplicationUsersDiets",
+                column: "DietId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -248,14 +291,22 @@ namespace PROJET.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeDiet_DietId",
-                table: "RecipeDiet",
+                name: "IX_Recipes_ApplicationUserId",
+                table: "Recipes",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipesDiets_DietId",
+                table: "RecipesDiets",
                 column: "DietId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicationUsersDiets");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -272,19 +323,19 @@ namespace PROJET.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "RecipeDiet");
+                name: "RecipesDiets");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Diets");
+
+            migrationBuilder.DropTable(
+                name: "Recipes");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Diet");
-
-            migrationBuilder.DropTable(
-                name: "Recipe");
         }
     }
 }

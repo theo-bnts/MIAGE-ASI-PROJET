@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PROJET.Data;
@@ -5,6 +7,7 @@ using PROJET.Model;
 
 namespace PROJET.Pages.Recipes;
 
+[Authorize]
 public class CreateModel : PageModel
 {
     private readonly ApplicationDbContext _context;
@@ -32,6 +35,8 @@ public class CreateModel : PageModel
         {
             return OnGet();
         }
+        
+        Recipe.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         
         _context.Recipes.Add(Recipe);
         await _context.SaveChangesAsync();

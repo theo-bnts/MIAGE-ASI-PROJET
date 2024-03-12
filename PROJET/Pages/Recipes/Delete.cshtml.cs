@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +8,7 @@ using PROJET.Model;
 
 namespace PROJET.Pages.Recipes;
 
+[Authorize]
 public class DeleteModel : PageModel
 {
     private readonly ApplicationDbContext _context;
@@ -25,7 +28,12 @@ public class DeleteModel : PageModel
 
         if (recipe == null)
             return NotFound();
+        
+        if (!User.IsInRole("ADMINISTRATEUR") && recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            return Forbid();
+        
         Recipe = recipe;
+        
         return Page();
     }
 
@@ -37,6 +45,7 @@ public class DeleteModel : PageModel
         if (recipe != null)
         {
             Recipe = recipe;
+            
             _context.Recipes.Remove(Recipe);
             await _context.SaveChangesAsync();
         }

@@ -12,8 +12,8 @@ using PROJET.Data;
 namespace PROJET.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240310172343_Rename dbsets")]
-    partial class Renamedbsets
+    [Migration("20240312225255_Initial and Recipe")]
+    partial class InitialandRecipe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,6 +227,30 @@ namespace PROJET.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("PROJET.Model.ApplicationUserDiet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DietId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("DietId");
+
+                    b.ToTable("ApplicationUsersDiets");
+                });
+
             modelBuilder.Entity("PROJET.Model.Diet", b =>
                 {
                     b.Property<int>("Id")
@@ -252,6 +276,10 @@ namespace PROJET.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -261,6 +289,8 @@ namespace PROJET.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Recipes");
                 });
@@ -281,30 +311,6 @@ namespace PROJET.Data.Migrations
                     b.HasIndex("DietId");
 
                     b.ToTable("RecipesDiets");
-                });
-
-            modelBuilder.Entity("PROJET.Model.UserDiet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DietId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("DietId");
-
-                    b.ToTable("UsersDiets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -358,6 +364,36 @@ namespace PROJET.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PROJET.Model.ApplicationUserDiet", b =>
+                {
+                    b.HasOne("PROJET.Model.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PROJET.Model.Diet", "Diet")
+                        .WithMany()
+                        .HasForeignKey("DietId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Diet");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Recipe", b =>
+                {
+                    b.HasOne("PROJET.Model.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
                 {
                     b.HasOne("PROJET.Model.Diet", "Diet")
@@ -375,25 +411,6 @@ namespace PROJET.Data.Migrations
                     b.Navigation("Diet");
 
                     b.Navigation("Recipe");
-                });
-
-            modelBuilder.Entity("PROJET.Model.UserDiet", b =>
-                {
-                    b.HasOne("PROJET.Model.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PROJET.Model.Diet", "Diet")
-                        .WithMany()
-                        .HasForeignKey("DietId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Diet");
                 });
 
             modelBuilder.Entity("PROJET.Model.Diet", b =>

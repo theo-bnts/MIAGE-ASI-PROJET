@@ -13,4 +13,7 @@ public class Recipe
     public required string Description { get; set; }
 
     public IEnumerable<RecipeDiet>? RecipeDiets { get; set; }
+    
+    public required string ApplicationUserId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; }
 }

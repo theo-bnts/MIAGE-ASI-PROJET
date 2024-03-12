@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
@@ -5,6 +6,7 @@ using PROJET.Model;
 
 namespace PROJET.Pages.Recipes;
 
+[Authorize]
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _context;
