@@ -28,12 +28,13 @@ public class DeleteModel : PageModel
 
         if (recipe == null)
             return NotFound();
-        
-        if (!User.IsInRole("ADMINISTRATEUR") && recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+
+        if (!User.IsInRole("ADMINISTRATEUR") &&
+            recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
             return Forbid();
-        
+
         Recipe = recipe;
-        
+
         return Page();
     }
 
@@ -45,7 +46,7 @@ public class DeleteModel : PageModel
         if (recipe != null)
         {
             Recipe = recipe;
-            
+
             _context.Recipes.Remove(Recipe);
             await _context.SaveChangesAsync();
         }

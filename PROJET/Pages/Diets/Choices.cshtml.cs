@@ -25,14 +25,14 @@ public class ChoicesModel : PageModel
     public async Task<IActionResult> OnGetAsync()
     {
         Diets = _context.Diets.ToList();
-        
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         SelectedDiets = await _context.ApplicationUsersDiets
             .Where(ud => ud.ApplicationUserId == userId)
             .Select(ud => ud.DietId)
             .ToArrayAsync();
-        
+
         return Page();
     }
 
@@ -40,13 +40,10 @@ public class ChoicesModel : PageModel
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            return await OnGetAsync();
-        }
-        
+        if (!ModelState.IsValid) return await OnGetAsync();
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         var existingUserDiets = await _context.ApplicationUsersDiets
             .Where(ud => ud.ApplicationUserId == userId)
             .ToListAsync();

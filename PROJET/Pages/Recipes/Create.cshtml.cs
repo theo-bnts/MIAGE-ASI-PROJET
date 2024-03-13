@@ -26,24 +26,21 @@ public class CreateModel : PageModel
     public IActionResult OnGet()
     {
         Diets = _context.Diets.ToList();
-        
+
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
         ModelState.Remove("Recipe.ApplicationUserId");
-        
-        if (!ModelState.IsValid)
-        {
-            return OnGet();
-        }
-        
+
+        if (!ModelState.IsValid) return OnGet();
+
         Recipe.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        
+
         _context.Recipes.Add(Recipe);
         await _context.SaveChangesAsync();
-        
+
         foreach (var dietId in SelectedDiets)
         {
             var recipeDiet = new RecipeDiet
@@ -53,6 +50,7 @@ public class CreateModel : PageModel
             };
             _context.RecipesDiets.Add(recipeDiet);
         }
+
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");

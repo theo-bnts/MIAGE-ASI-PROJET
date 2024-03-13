@@ -27,7 +27,7 @@ public class DetailsModel : PageModel
         if (diet == null)
             return NotFound();
         Diet = diet;
-        
+
         return Page();
     }
 }

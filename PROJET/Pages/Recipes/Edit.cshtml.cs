@@ -12,18 +12,18 @@ namespace PROJET.Pages.Recipes;
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
-    
+
+    public EditModel(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     [BindProperty] public Recipe Recipe { get; set; } = default!;
 
     public List<Diet> Diets { get; set; } = default!;
 
     [BindProperty] public required int[] SelectedDiets { get; set; }
 
-    public EditModel(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-    
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
@@ -36,8 +36,9 @@ public class EditModel : PageModel
 
         if (recipe == null)
             return NotFound();
-        
-        if (!User.IsInRole("ADMINISTRATEUR") && recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+
+        if (!User.IsInRole("ADMINISTRATEUR") &&
+            recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
             return Forbid();
 
         Recipe = recipe;
@@ -47,7 +48,7 @@ public class EditModel : PageModel
         SelectedDiets = Recipe.RecipeDiets!
             .Select(rd => rd.DietId)
             .ToArray();
-        
+
         return Page();
     }
 
@@ -55,10 +56,7 @@ public class EditModel : PageModel
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync(int? id)
     {
-        if (!ModelState.IsValid)
-        {
-            return await OnGetAsync(id);
-        }
+        if (!ModelState.IsValid) return await OnGetAsync(id);
 
         _context.Attach(Recipe).State = EntityState.Modified;
 
@@ -70,16 +68,16 @@ public class EditModel : PageModel
         {
             if (!_context.Recipes.Any(r => r.Id == Recipe.Id))
                 return NotFound();
-            
+
             throw;
         }
-        
+
         var existingRecipeDiets = await _context.RecipesDiets
             .Where(rd => rd.RecipeId == Recipe.Id)
             .ToListAsync();
 
         _context.RecipesDiets.RemoveRange(existingRecipeDiets);
-        
+
         foreach (var dietId in SelectedDiets)
         {
             var recipeDiet = new RecipeDiet

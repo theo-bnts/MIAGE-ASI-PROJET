@@ -45,7 +45,7 @@ public class EditModel : PageModel
         {
             if (!_context.Diets.Any(d => d.Id == Diet.Id))
                 return NotFound();
-            
+
             throw;
         }
 
