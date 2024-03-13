@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -6,21 +8,22 @@ using PROJET.Model;
 
 namespace PROJET.Pages.Recipes;
 
+[Authorize]
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _context;
-    
+
+    public EditModel(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     [BindProperty] public Recipe Recipe { get; set; } = default!;
 
     public List<Diet> Diets { get; set; } = default!;
 
     [BindProperty] public required int[] SelectedDiets { get; set; }
 
-    public EditModel(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-    
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
@@ -34,6 +37,10 @@ public class EditModel : PageModel
         if (recipe == null)
             return NotFound();
 
+        if (!User.IsInRole("ADMINISTRATEUR") &&
+            recipe.ApplicationUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            return Forbid();
+
         Recipe = recipe;
 
         Diets = _context.Diets.ToList();
@@ -41,7 +48,7 @@ public class EditModel : PageModel
         SelectedDiets = Recipe.RecipeDiets!
             .Select(rd => rd.DietId)
             .ToArray();
-        
+
         return Page();
     }
 
@@ -49,10 +56,7 @@ public class EditModel : PageModel
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync(int? id)
     {
-        if (!ModelState.IsValid)
-        {
-            return await OnGetAsync(id);
-        }
+        if (!ModelState.IsValid) return await OnGetAsync(id);
 
         _context.Attach(Recipe).State = EntityState.Modified;
 
@@ -62,11 +66,12 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!RecipeExists(Recipe.Id))
+            if (!_context.Recipes.Any(r => r.Id == Recipe.Id))
                 return NotFound();
+
             throw;
         }
-        
+
         var existingRecipeDiets = await _context.RecipesDiets
             .Where(rd => rd.RecipeId == Recipe.Id)
             .ToListAsync();
@@ -86,10 +91,5 @@ public class EditModel : PageModel
         await _context.SaveChangesAsync();
 
         return RedirectToPage("./Index");
-    }
-
-    private bool RecipeExists(int id)
-    {
-        return _context.Recipes.Any(e => e.Id == id);
     }
 }

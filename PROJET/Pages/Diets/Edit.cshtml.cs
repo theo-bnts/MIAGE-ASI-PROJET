@@ -43,16 +43,12 @@ public class EditModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!DietExists(Diet.Id))
+            if (!_context.Diets.Any(d => d.Id == Diet.Id))
                 return NotFound();
+
             throw;
         }
 
         return RedirectToPage("./Index");
-    }
-
-    private bool DietExists(int id)
-    {
-        return _context.Diets.Any(e => e.Id == id);
     }
 }

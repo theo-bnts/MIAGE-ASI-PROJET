@@ -4,7 +4,7 @@ namespace PROJET.Model;
 
 public class Diet
 {
-    [Key] public required int Id { get; set; }
+    [Key] public int Id { get; set; }
 
     [Required] public required string Name { get; set; }
 
