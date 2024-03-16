@@ -1,5 +1,5 @@
 ﻿@page
-@model PROJET.Pages.Humeurs.IndexModel
+@model PROJET.Pages.Moods.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -41,28 +41,41 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Humeur[0].Name)
+                    @Html.DisplayNameFor(model => model.MoodsOfUsers[0].Id)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Humeur[0].Date)
+                    @Html.DisplayNameFor(model => model.MoodsOfUsers[0].RefMoodName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Humeur[0].ApplicationUserId)
+                    @Html.DisplayNameFor(model => model.MoodsOfUsers[0].Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MoodsOfUsers[0].ApplicationUserId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MoodsOfUsers[0].ApplicationUserMail)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Humeur) {
+            @foreach (var item in Model.MoodsOfUsers)
+            {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RefMoodName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ApplicationUserId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUserMail)
                     </td>
                     <td>
                         <!-- <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

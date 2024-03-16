@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using PROJET.Data;
 using PROJET.Model;
 
-namespace PROJET.Pages.SocioProfessionalCategories
+namespace PROJET.Pages.RefMoods
 {
     public class CreateModel : PageModel
     {
@@ -25,7 +25,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
         }
 
         [BindProperty]
-        public SocioProfessionalCategory SocioProfessionalCategory { get; set; } = default!;
+        public RefMood RefMood { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -35,7 +35,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
                 return Page();
             }
 
-            _context.SocioProfessionalCategory.Add(SocioProfessionalCategory);
+            _context.RefMood.Add(RefMood);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

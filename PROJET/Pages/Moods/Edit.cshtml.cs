@@ -10,17 +10,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace PROJET.Pages.Humeurs
+namespace PROJET.Pages.Moods
 {
     [Authorize]
     public class EditModel : PageModel
     {
         private readonly PROJET.Data.ApplicationDbContext _context;
-        UserManager<IdentityUser> _userManager;
+        UserManager<ApplicationUser> _userManager;
 
-        public EditModel(PROJET.Data.ApplicationDbContext context, UserManager<IdentityUser>
+        public EditModel(PROJET.Data.ApplicationDbContext context, UserManager<ApplicationUser>
             userManager)
         {
             _context = context;
@@ -28,12 +27,15 @@ namespace PROJET.Pages.Humeurs
         }
 
         [BindProperty]
-        public Mood Humeur { get; set; } = default!;
+        public Mood Mood { get; set; } = default!;
 
         public string UserID { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
+            var ListMoods = await _context.RefMood.ToListAsync();
+
+            ViewData["ListMoodID"] = new SelectList(ListMoods, "Id", "Name");
 
             DateTime dateDuJour = DateTime.Today.Date;
 
@@ -44,10 +46,10 @@ namespace PROJET.Pages.Humeurs
             var user = await _userManager.GetUserAsync(User);
             // Récupérer l'identifiant utilisateur en tant que string
             UserID = user.Id;
-            
+
             ViewData["LutilisateurID"] = UserID;
 
-            
+
             return Page();
         }
 
@@ -55,18 +57,18 @@ namespace PROJET.Pages.Humeurs
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            var existingHumeur = await _context.Humeur.FirstOrDefaultAsync(h =>
-                h.UtilisateurID == Humeur.ApplicationUserId &&
-                h.Date_Humeur == Humeur.Date); 
+            var existingHumeur = await _context.Mood.FirstOrDefaultAsync(h =>
+                h.ApplicationUserId == Mood.ApplicationUserId &&
+                h.Date == Mood.Date);
 
             if (existingHumeur != null)
             {
                 // _context.Entry(existingHumeur).CurrentValues.SetValues(Humeur);
-                existingHumeur.Nom_Humeur = Humeur.Name;
+                existingHumeur.RefMoodId = Mood.RefMoodId;
             }
             else
             {
-                _context.Humeur.Add(Humeur);
+                _context.Mood.Add(Mood);
             }
 
             try
@@ -75,7 +77,7 @@ namespace PROJET.Pages.Humeurs
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!HumeurExists(Humeur.ApplicationUserId, Humeur.Date))
+                if (!MoodExists(Mood.ApplicationUserId, Mood.Date))
                 {
                     return NotFound();
                 }
@@ -88,9 +90,9 @@ namespace PROJET.Pages.Humeurs
             return RedirectToPage("./Index");
         }
 
-        private bool HumeurExists(string id, DateTime humeur)
+        private bool MoodExists(string id, DateTime humeur)
         {
-            return _context.Humeur.Any(h => h.UtilisateurID == id && h.Date_Humeur.Date == humeur);
+            return _context.Mood.Any(h => h.ApplicationUserId == id && h.Date.Date == humeur);
         }
     }
 }

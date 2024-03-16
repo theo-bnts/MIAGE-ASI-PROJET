@@ -1,5 +1,5 @@
 ﻿@page
-@model PROJET.Pages.Humeurs.DetailsModel
+@model PROJET.Pages.Moods.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
@@ -34,14 +34,14 @@
 {
     <div>
         <h4>Humeur</h4>
-        <hr/>
+        <hr />
 
         <table class="table">
             <thead>
                 <tr>
                     <th>
                         <h3>Content</h3>
-                   </th>
+                    </th>
                     <th>
                         <h3>Mitigé</h3>
                     </th>
@@ -51,7 +51,7 @@
                 </tr>
             </thead>
 
-             <tbody>
+            <tbody>
                 <tr>
                     <td>
                         <h3>  @Model.Moyenne_Content % </h3>
@@ -65,7 +65,7 @@
                 </tr>
             </tbody>
         </table>
-        
+
     </div>
 
 }

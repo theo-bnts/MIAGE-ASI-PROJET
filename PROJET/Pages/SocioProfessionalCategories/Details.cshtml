@@ -1,5 +1,5 @@
 ﻿@page
-@model PROJET.Pages.Categories_sociopros.DetailsModel
+@model PROJET.Pages.SocioProfessionalCategories.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
@@ -8,18 +8,18 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Categorie_sociopro</h4>
+    <h4>SocioProfessionalCategory</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Categorie_sociopro.Name)
+            @Html.DisplayNameFor(model => model.SocioProfessionalCategory.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Categorie_sociopro.Name)
+            @Html.DisplayFor(model => model.SocioProfessionalCategory.Name)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Categorie_sociopro.Id">Edit</a> |
+    <a asp-page="./Edit" asp-route-id="@Model.SocioProfessionalCategory.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>

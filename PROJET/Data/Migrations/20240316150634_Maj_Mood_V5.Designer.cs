@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PROJET.Data;
 
@@ -11,9 +12,11 @@ using PROJET.Data;
 namespace PROJET.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316150634_Maj_Mood_V5")]
+    partial class Maj_Mood_V5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,6 +170,14 @@ namespace PROJET.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("ApplicationUserFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -281,14 +292,13 @@ namespace PROJET.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RefMoodId")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserSocioProfessionalCategoryId");
-
-                    b.HasIndex("RefMoodId");
 
                     b.ToTable("Mood");
                 });
@@ -457,14 +467,6 @@ namespace PROJET.Data.Migrations
                     b.HasOne("PROJET.Model.ApplicationUserSocioProfessionalCategory", null)
                         .WithMany("ListMoods")
                         .HasForeignKey("ApplicationUserSocioProfessionalCategoryId");
-
-                    b.HasOne("PROJET.Model.RefMood", "RefMood")
-                        .WithMany("Moods")
-                        .HasForeignKey("RefMoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RefMood");
                 });
 
             modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
@@ -518,11 +520,6 @@ namespace PROJET.Data.Migrations
             modelBuilder.Entity("PROJET.Model.Recipe", b =>
                 {
                     b.Navigation("RecipeDiets");
-                });
-
-            modelBuilder.Entity("PROJET.Model.RefMood", b =>
-                {
-                    b.Navigation("Moods");
                 });
 #pragma warning restore 612, 618
         }

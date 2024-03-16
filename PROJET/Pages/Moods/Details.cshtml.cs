@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
+using PROJET.ViewModels;
 
-namespace PROJET.Pages.Humeurs
+namespace PROJET.Pages.Moods
 {
-    [Authorize(Roles = "ADMINISTRATEUR")]
     public class DetailsModel : PageModel
     {
         private readonly PROJET.Data.ApplicationDbContext _context;
@@ -21,9 +20,13 @@ namespace PROJET.Pages.Humeurs
             _context = context;
         }
 
-        public IList<Mood> Humeur { get; set; } = default!;
+        public Mood Mood { get; set; } = default!;
+
+        public IList<Mood> Moods { get; set; } = default!;
 
         public IList<SocioProfessionalCategory> Categories { get; set; }
+
+        public List<MoodsOfUsers> MoodsOfUsers { get; set; }
 
         public String Etape { get; set; }
 
@@ -36,25 +39,9 @@ namespace PROJET.Pages.Humeurs
         public async Task<IActionResult> OnGetAsync()
         {
 
-            Categories = await _context.Categorie_sociopro.ToListAsync();
+            Categories = await _context.SocioProfessionalCategory.ToListAsync();
 
             Etape = "Choix";
-
-            /* if (id == null)
-             {
-                 return NotFound();
-             }
-
-             var humeur = await _context.Humeur.FirstOrDefaultAsync(m => m.ID == id);
-             if (humeur == null)
-             {
-                 return NotFound();
-             }
-             else
-             {
-                 Humeur = humeur;
-             }*/
-
 
             return Page();
         }
@@ -66,38 +53,50 @@ namespace PROJET.Pages.Humeurs
             {
 
                 // Étape 1: Obtenir tous les utilisateurs de la catégorie choisie
-                var Utilisateurs = await _context.Emploi
-                    .Include(e => e.LesHumeurs)
-                    .Where(e => e.LaCategorieID == ChoixCategorie)
+                var Utilisateurs = await _context.ApplicationUserSocioProfessionalCategory
+                    .Include(e => e.ListMoods)
+                    .Where(e => e.SocioProfessionalCategoryId == ChoixCategorie)
                     .ToListAsync();
 
                 //await _context.Categorie_sociopro.ToListAsync();
 
                 // Récupérer les IDs des utilisateurs
-                var idsUtilisateurs = Utilisateurs.Select(u => u.LutilisateurID).ToList();
+                var idsUtilisateurs = Utilisateurs.Select(u => u.ApplicationUserId).ToList();
 
                 // Étape 2: Filtrer les humeurs en fonction des IDs des utilisateurs récupérés
-                Humeur = await _context.Humeur.Where(h => idsUtilisateurs.Contains(h.UtilisateurID)).ToListAsync();
+                //Moods = await _context.Mood.Where(h => idsUtilisateurs.Contains(h.ApplicationUserId)).ToListAsync();
+
+                MoodsOfUsers = await _context.Mood
+                .Include(rm => rm.RefMood)
+                .Where(rm => idsUtilisateurs.Contains(rm.ApplicationUserId))
+                .Select(rm => new MoodsOfUsers
+                {
+                    Id = rm.Id,
+                    RefMoodName = rm.RefMood.Name,
+                    Date = rm.Date,
+                    ApplicationUserId = rm.ApplicationUserId
+                })
+                .ToListAsync();
 
                 double total = 0;
                 double total_content = 0;
                 double total_mitige = 0;
                 double total_triste = 0;
 
-                foreach (Mood humeur in Humeur)
+                foreach (MoodsOfUsers mood in MoodsOfUsers)
                 {
-                   
-                    if (humeur.Name == "Content")
+
+                    if (mood.RefMoodName == "Content")
                     {
                         total_content++;
                     }
 
-                    if (humeur.Name == "Mitigé")
+                    if (mood.RefMoodName == "Mitigé")
                     {
                         total_mitige++;
                     }
 
-                    if (humeur.Name == "Triste")
+                    if (mood.RefMoodName == "Triste")
                     {
                         total_triste++;
                     }
@@ -106,9 +105,9 @@ namespace PROJET.Pages.Humeurs
                 }
 
 
-                 Moyenne_Content = (total_content / total)*100;
-                 Moyenne_Mitige = (total_mitige / total)*100;
-                 Moyenne_Triste = (total_triste / total)*100;
+                Moyenne_Content = (total_content / total) * 100;
+                Moyenne_Mitige = (total_mitige / total) * 100;
+                Moyenne_Triste = (total_triste / total) * 100;
 
                 Console.WriteLine(Moyenne_Content);
                 Console.WriteLine(Moyenne_Mitige);

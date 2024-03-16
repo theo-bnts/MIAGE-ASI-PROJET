@@ -11,16 +11,15 @@ namespace PROJET.Model
         //Lien vers l'utilisateur
         [Required]
         public string? ApplicationUserId { get; set; }
-        [Required]
-        public string ApplicationUserLastName { get; set; }
-        [Required]
-        public string ApplicationUserFirstName { get; set; }
-
 
         //Lien de composition vers une catégorie
         [Required]
         public int SocioProfessionalCategoryId { get; set; }
         public SocioProfessionalCategory? SocioProfessionalCategory { get; set; }
+
+        // Lien de navigation ManyToMany 
+        [Display(Name = "Les humeurs de l'utilisateur")]
+        public ICollection<Mood> ListMoods { get; set; }
 
 
     }

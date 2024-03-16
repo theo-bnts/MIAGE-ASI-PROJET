@@ -1,5 +1,5 @@
 ﻿@page
-@model PROJET.Pages.Humeurs.EditModel
+@model PROJET.Pages.Moods.EditModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,27 +13,24 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Humeur.Id" />
+            <input type="hidden" asp-for="Mood.Id" />
             <div class="form-group">
-                <label>Choix Humeur :</label>
-                <!--<input asp-for="Humeur.Nom_Humeur" class="form-control" />-->
-                <select asp-for="Humeur.Name" class="form-control">
-                    <option value="">Choix humeur</option>
-                    <option value="Content">Content</option>
-                    <option value="Mitigé">Mitigé</option>
-                    <option value="Triste">Triste</option>
-                </select>
+                <div class="form-group">
+                    <label>Choix Humeur :</label>
+                    <select asp-for="Mood.RefMoodId" class="form-control" asp-items="ViewBag.ListMoodID"></select>
+                    <span asp-validation-for="Mood.RefMoodId" class="text-danger"></span>
+                </div>
 
-                <span asp-validation-for="Humeur.Name" class="text-danger"></span>
+                <span asp-validation-for="Mood.RefMoodId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>Date de l'humeur :</label>
-                <input type="date" asp-for="Humeur.Date" value="@ViewData["DateDuJour"]" class="form-control" />
-                <span asp-validation-for="Humeur.Date" class="text-danger"></span>
+                <input type="date" asp-for="Mood.Date" value="@ViewData["DateDuJour"]" class="form-control" />
+                <span asp-validation-for="Mood.Date" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <!--<label asp-for="Humeur.UtilisateurID" class="control-label"></label> -->
-                <input type="hidden" asp-for="Humeur.ApplicationUserId" class="form-control" value="@ViewData["LutilisateurID"]" />
+                <input type="hidden" asp-for="Mood.ApplicationUserId" class="form-control" value="@ViewData["LutilisateurID"]" />
                 <!-- <span asp-validation-for="Humeur.UtilisateurID" class="text-danger"></span> -->
             </div>
             <div class="form-group">
@@ -44,5 +41,8 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
 
-namespace PROJET.Pages.SocioProfessionalCategories
+namespace PROJET.Pages.RefMoods
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
         }
 
         [BindProperty]
-        public SocioProfessionalCategory SocioProfessionalCategory { get; set; } = default!;
+        public RefMood RefMood { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,12 +30,12 @@ namespace PROJET.Pages.SocioProfessionalCategories
                 return NotFound();
             }
 
-            var socioprofessionalcategory =  await _context.SocioProfessionalCategory.FirstOrDefaultAsync(m => m.Id == id);
-            if (socioprofessionalcategory == null)
+            var refmood =  await _context.RefMood.FirstOrDefaultAsync(m => m.Id == id);
+            if (refmood == null)
             {
                 return NotFound();
             }
-            SocioProfessionalCategory = socioprofessionalcategory;
+            RefMood = refmood;
             return Page();
         }
 
@@ -48,7 +48,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
                 return Page();
             }
 
-            _context.Attach(SocioProfessionalCategory).State = EntityState.Modified;
+            _context.Attach(RefMood).State = EntityState.Modified;
 
             try
             {
@@ -56,7 +56,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SocioProfessionalCategoryExists(SocioProfessionalCategory.Id))
+                if (!RefMoodExists(RefMood.Id))
                 {
                     return NotFound();
                 }
@@ -69,9 +69,9 @@ namespace PROJET.Pages.SocioProfessionalCategories
             return RedirectToPage("./Index");
         }
 
-        private bool SocioProfessionalCategoryExists(int id)
+        private bool RefMoodExists(int id)
         {
-            return _context.SocioProfessionalCategory.Any(e => e.Id == id);
+            return _context.RefMood.Any(e => e.Id == id);
         }
     }
 }

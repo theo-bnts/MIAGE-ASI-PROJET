@@ -1,5 +1,5 @@
 ﻿@page
-@model PROJET.Pages.SocioProfessionalCategories.EditModel
+@model PROJET.Pages.RefMoods.EditModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,17 +7,17 @@
 
 <h1>Edit</h1>
 
-<h4>SocioProfessionalCategory</h4>
+<h4>RefMood</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SocioProfessionalCategory.Id" />
+            <input type="hidden" asp-for="RefMood.Id" />
             <div class="form-group">
-                <label asp-for="SocioProfessionalCategory.Name" class="control-label"></label>
-                <input asp-for="SocioProfessionalCategory.Name" class="form-control" />
-                <span asp-validation-for="SocioProfessionalCategory.Name" class="text-danger"></span>
+                <label asp-for="RefMood.Name" class="control-label"></label>
+                <input asp-for="RefMood.Name" class="form-control" />
+                <span asp-validation-for="RefMood.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
-using Microsoft.AspNetCore.Identity;
 
-namespace PROJET.Pages.Emplois
+namespace PROJET.Pages.ApplicationUserSocioProfessionalCategories
 {
     [Authorize(Roles = null)]
     public class EditModel : PageModel
     {
         private readonly PROJET.Data.ApplicationDbContext _context;
-        UserManager<IdentityUser> _userManager;
+        UserManager<ApplicationUser> _userManager;
 
-        public EditModel(PROJET.Data.ApplicationDbContext context, UserManager<IdentityUser>
+        public EditModel(PROJET.Data.ApplicationDbContext context, UserManager<ApplicationUser>
             userManager)
         {
             _context = context;
@@ -27,32 +27,30 @@ namespace PROJET.Pages.Emplois
         }
 
         [BindProperty]
-        public ApplicationUserSocioProfessionalCategory Emploi { get; set; } = default!;
+        public ApplicationUserSocioProfessionalCategory ApplicationUserSocioProfessionalCategory { get; set; } = default!;
 
         public string UserID { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
+            var categories = await _context.SocioProfessionalCategory.ToListAsync();
 
-            var categories = await _context.Categorie_sociopro.ToListAsync();
-
-            ViewData["LaCategorieID"] = new SelectList(categories, "ID", "Nom_categorie");
+            ViewData["LaCategorieID"] = new SelectList(categories, "Id", "Name");
 
             var user = await _userManager.GetUserAsync(User);
             // Récupérer l'identifiant utilisateur en tant que string
             UserID = user.Id;
-            
+
             ViewData["LutilisateurID"] = UserID;
 
-            var emploi =  await _context.Emploi.FirstOrDefaultAsync(m => m.LutilisateurID == UserID);
-            
-            if (emploi == null)
+            var auspc = await _context.ApplicationUserSocioProfessionalCategory.FirstOrDefaultAsync(m => m.ApplicationUserId == UserID);
+
+            if (auspc == null)
             {
                 return Page();
             }
-            Emploi = emploi;
+            ApplicationUserSocioProfessionalCategory = auspc;
 
-            ViewData["LaCategorieID"] = new SelectList(_context.Categorie_sociopro, "ID", "Nom_categorie");
             return Page();
         }
 
@@ -60,20 +58,19 @@ namespace PROJET.Pages.Emplois
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-
-            var existingEmploi = await _context.Emploi.FirstOrDefaultAsync( e => e.LutilisateurID == Emploi.ApplicationUserId);
+            var existingEmploi = await _context.ApplicationUserSocioProfessionalCategory.FirstOrDefaultAsync(e => e.ApplicationUserId == ApplicationUserSocioProfessionalCategory.ApplicationUserId);
 
             if (existingEmploi != null)
             {
-                _context.Entry(existingEmploi).CurrentValues.SetValues(Emploi);
-                
+                _context.Entry(existingEmploi).CurrentValues.SetValues(ApplicationUserSocioProfessionalCategory);
+
             }
             else
             {
-                _context.Emploi.Add(Emploi);
+                _context.ApplicationUserSocioProfessionalCategory.Add(ApplicationUserSocioProfessionalCategory);
             }
 
-            
+
 
             try
             {
@@ -81,7 +78,7 @@ namespace PROJET.Pages.Emplois
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmploiExists(Emploi.ApplicationUserId))
+                if (!AuspcExists(ApplicationUserSocioProfessionalCategory.ApplicationUserId))
                 {
                     return NotFound();
                 }
@@ -94,9 +91,11 @@ namespace PROJET.Pages.Emplois
             return RedirectToPage("./Edit");
         }
 
-        private bool EmploiExists(string id)
+        private bool AuspcExists(string id)
         {
-            return _context.Emploi.Any(e => e.LutilisateurID == id);
+            return _context.ApplicationUserSocioProfessionalCategory.Any(e => e.ApplicationUserId == id);
         }
     }
+
 }
+

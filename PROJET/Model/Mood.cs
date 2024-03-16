@@ -8,14 +8,20 @@ namespace PROJET.Model
         [Key]
         public int Id { get; set; }
 
+        //Lien de composition vers une catégorie
         [Required]
-        public string Name { get; set; }
+        public int RefMoodId { get; set; }
+        public RefMood? RefMood { get; set; }
 
         [Required]
         public DateTime Date { get; set; }
 
         [Required]
         public string ApplicationUserId { get; set; }
+
+        public ApplicationUser? User { get; set; }
+
+
 
     }
 }

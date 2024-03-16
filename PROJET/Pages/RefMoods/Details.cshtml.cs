@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
 
-namespace PROJET.Pages.SocioProfessionalCategories
+namespace PROJET.Pages.RefMoods
 {
     public class DetailsModel : PageModel
     {
@@ -19,7 +19,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
             _context = context;
         }
 
-        public SocioProfessionalCategory SocioProfessionalCategory { get; set; } = default!;
+        public RefMood RefMood { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,14 +28,14 @@ namespace PROJET.Pages.SocioProfessionalCategories
                 return NotFound();
             }
 
-            var socioprofessionalcategory = await _context.SocioProfessionalCategory.FirstOrDefaultAsync(m => m.Id == id);
-            if (socioprofessionalcategory == null)
+            var refmood = await _context.RefMood.FirstOrDefaultAsync(m => m.Id == id);
+            if (refmood == null)
             {
                 return NotFound();
             }
             else
             {
-                SocioProfessionalCategory = socioprofessionalcategory;
+                RefMood = refmood;
             }
             return Page();
         }

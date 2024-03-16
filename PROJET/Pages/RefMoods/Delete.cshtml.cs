@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
 
-namespace PROJET.Pages.SocioProfessionalCategories
+namespace PROJET.Pages.RefMoods
 {
     public class DeleteModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace PROJET.Pages.SocioProfessionalCategories
         }
 
         [BindProperty]
-        public SocioProfessionalCategory SocioProfessionalCategory { get; set; } = default!;
+        public RefMood RefMood { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,15 +29,15 @@ namespace PROJET.Pages.SocioProfessionalCategories
                 return NotFound();
             }
 
-            var socioprofessionalcategory = await _context.SocioProfessionalCategory.FirstOrDefaultAsync(m => m.Id == id);
+            var refmood = await _context.RefMood.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (socioprofessionalcategory == null)
+            if (refmood == null)
             {
                 return NotFound();
             }
             else
             {
-                SocioProfessionalCategory = socioprofessionalcategory;
+                RefMood = refmood;
             }
             return Page();
         }
@@ -49,11 +49,11 @@ namespace PROJET.Pages.SocioProfessionalCategories
                 return NotFound();
             }
 
-            var socioprofessionalcategory = await _context.SocioProfessionalCategory.FindAsync(id);
-            if (socioprofessionalcategory != null)
+            var refmood = await _context.RefMood.FindAsync(id);
+            if (refmood != null)
             {
-                SocioProfessionalCategory = socioprofessionalcategory;
-                _context.SocioProfessionalCategory.Remove(SocioProfessionalCategory);
+                RefMood = refmood;
+                _context.RefMood.Remove(RefMood);
                 await _context.SaveChangesAsync();
             }
 

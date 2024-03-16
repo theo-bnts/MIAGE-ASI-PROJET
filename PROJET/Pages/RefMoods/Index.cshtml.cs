@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
 using PROJET.Model;
 
-namespace PROJET.Pages.SocioProfessionalCategories
+namespace PROJET.Pages.RefMoods
 {
     public class IndexModel : PageModel
     {
@@ -19,11 +19,11 @@ namespace PROJET.Pages.SocioProfessionalCategories
             _context = context;
         }
 
-        public IList<SocioProfessionalCategory> SocioProfessionalCategory { get;set; } = default!;
+        public IList<RefMood> RefMood { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            SocioProfessionalCategory = await _context.SocioProfessionalCategory.ToListAsync();
+            RefMood = await _context.RefMood.ToListAsync();
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PROJET.Data;
 
@@ -11,13 +12,15 @@ using PROJET.Data;
 namespace PROJET.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316105724_Maj_Mood_V1")]
+    partial class Maj_Mood_V1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -167,6 +170,14 @@ namespace PROJET.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("ApplicationUserFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -224,28 +235,6 @@ namespace PROJET.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("PROJET.Model.ApplicationUserSocioProfessionalCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SocioProfessionalCategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SocioProfessionalCategoryId");
-
-                    b.ToTable("ApplicationUserSocioProfessionalCategory");
-                });
-
             modelBuilder.Entity("PROJET.Model.Diet", b =>
                 {
                     b.Property<int>("Id")
@@ -261,36 +250,6 @@ namespace PROJET.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Diets");
-                });
-
-            modelBuilder.Entity("PROJET.Model.Mood", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ApplicationUserSocioProfessionalCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RefMoodId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserSocioProfessionalCategoryId");
-
-                    b.HasIndex("RefMoodId");
-
-                    b.ToTable("Mood");
                 });
 
             modelBuilder.Entity("PROJET.Model.Recipe", b =>
@@ -330,40 +289,6 @@ namespace PROJET.Data.Migrations
                     b.HasIndex("DietId");
 
                     b.ToTable("RecipesDiets");
-                });
-
-            modelBuilder.Entity("PROJET.Model.RefMood", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RefMood");
-                });
-
-            modelBuilder.Entity("PROJET.Model.SocioProfessionalCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SocioProfessionalCategory");
                 });
 
             modelBuilder.Entity("PROJET.Model.UserDiet", b =>
@@ -441,32 +366,6 @@ namespace PROJET.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PROJET.Model.ApplicationUserSocioProfessionalCategory", b =>
-                {
-                    b.HasOne("PROJET.Model.SocioProfessionalCategory", "SocioProfessionalCategory")
-                        .WithMany()
-                        .HasForeignKey("SocioProfessionalCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SocioProfessionalCategory");
-                });
-
-            modelBuilder.Entity("PROJET.Model.Mood", b =>
-                {
-                    b.HasOne("PROJET.Model.ApplicationUserSocioProfessionalCategory", null)
-                        .WithMany("ListMoods")
-                        .HasForeignKey("ApplicationUserSocioProfessionalCategoryId");
-
-                    b.HasOne("PROJET.Model.RefMood", "RefMood")
-                        .WithMany("Moods")
-                        .HasForeignKey("RefMoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RefMood");
-                });
-
             modelBuilder.Entity("PROJET.Model.RecipeDiet", b =>
                 {
                     b.HasOne("PROJET.Model.Diet", "Diet")
@@ -505,11 +404,6 @@ namespace PROJET.Data.Migrations
                     b.Navigation("Diet");
                 });
 
-            modelBuilder.Entity("PROJET.Model.ApplicationUserSocioProfessionalCategory", b =>
-                {
-                    b.Navigation("ListMoods");
-                });
-
             modelBuilder.Entity("PROJET.Model.Diet", b =>
                 {
                     b.Navigation("RecipesDiet");
@@ -518,11 +412,6 @@ namespace PROJET.Data.Migrations
             modelBuilder.Entity("PROJET.Model.Recipe", b =>
                 {
                     b.Navigation("RecipeDiets");
-                });
-
-            modelBuilder.Entity("PROJET.Model.RefMood", b =>
-                {
-                    b.Navigation("Moods");
                 });
 #pragma warning restore 612, 618
         }
