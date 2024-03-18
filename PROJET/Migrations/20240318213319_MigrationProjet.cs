@@ -3,14 +3,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace PROJET.Data.Migrations
+namespace PROJET.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialandRecipe : Migration
+    public partial class MigrationProjet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ActivityGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityGroups", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -64,6 +77,53 @@ namespace PROJET.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefMood",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefMood", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SocioProfessionalCategory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SocioProfessionalCategory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Activies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActivityGroupId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Activies_ActivityGroups_ActivityGroupId",
+                        column: x => x.ActivityGroupId,
+                        principalTable: "ActivityGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -80,6 +140,32 @@ namespace PROJET.Data.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserActivities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ActivityGroupId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserActivities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserActivities_ActivityGroups_ActivityGroupId",
+                        column: x => x.ActivityGroupId,
+                        principalTable: "ActivityGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserActivities_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -217,6 +303,26 @@ namespace PROJET.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApplicationUserSocioProfessionalCategory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SocioProfessionalCategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserSocioProfessionalCategory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserSocioProfessionalCategory_SocioProfessionalCategory_SocioProfessionalCategoryId",
+                        column: x => x.SocioProfessionalCategoryId,
+                        principalTable: "SocioProfessionalCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RecipesDiets",
                 columns: table => new
                 {
@@ -241,6 +347,54 @@ namespace PROJET.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Mood",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RefMoodId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ApplicationUserSocioProfessionalCategoryId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mood", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mood_ApplicationUserSocioProfessionalCategory_ApplicationUserSocioProfessionalCategoryId",
+                        column: x => x.ApplicationUserSocioProfessionalCategoryId,
+                        principalTable: "ApplicationUserSocioProfessionalCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Mood_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Mood_RefMood_RefMoodId",
+                        column: x => x.RefMoodId,
+                        principalTable: "RefMood",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Activies_ActivityGroupId",
+                table: "Activies",
+                column: "ActivityGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserActivities_ActivityGroupId",
+                table: "ApplicationUserActivities",
+                column: "ActivityGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserActivities_ApplicationUserId",
+                table: "ApplicationUserActivities",
+                column: "ApplicationUserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUsersDiets_ApplicationUserId",
                 table: "ApplicationUsersDiets",
@@ -250,6 +404,11 @@ namespace PROJET.Data.Migrations
                 name: "IX_ApplicationUsersDiets_DietId",
                 table: "ApplicationUsersDiets",
                 column: "DietId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserSocioProfessionalCategory_SocioProfessionalCategoryId",
+                table: "ApplicationUserSocioProfessionalCategory",
+                column: "SocioProfessionalCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -291,6 +450,21 @@ namespace PROJET.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Mood_ApplicationUserId",
+                table: "Mood",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mood_ApplicationUserSocioProfessionalCategoryId",
+                table: "Mood",
+                column: "ApplicationUserSocioProfessionalCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mood_RefMoodId",
+                table: "Mood",
+                column: "RefMoodId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Recipes_ApplicationUserId",
                 table: "Recipes",
                 column: "ApplicationUserId");
@@ -304,6 +478,12 @@ namespace PROJET.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Activies");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationUserActivities");
+
             migrationBuilder.DropTable(
                 name: "ApplicationUsersDiets");
 
@@ -323,16 +503,31 @@ namespace PROJET.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Mood");
+
+            migrationBuilder.DropTable(
                 name: "RecipesDiets");
 
             migrationBuilder.DropTable(
+                name: "ActivityGroups");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationUserSocioProfessionalCategory");
+
+            migrationBuilder.DropTable(
+                name: "RefMood");
 
             migrationBuilder.DropTable(
                 name: "Diets");
 
             migrationBuilder.DropTable(
                 name: "Recipes");
+
+            migrationBuilder.DropTable(
+                name: "SocioProfessionalCategory");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
