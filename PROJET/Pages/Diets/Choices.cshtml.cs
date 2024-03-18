@@ -25,14 +25,14 @@ public class ChoicesModel : PageModel
     public async Task<IActionResult> OnGetAsync()
     {
         Diets = _context.Diets.ToList();
-        
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        SelectedDiets = await _context.UsersDiets
+        SelectedDiets = await _context.ApplicationUsersDiets
             .Where(ud => ud.ApplicationUserId == userId)
             .Select(ud => ud.DietId)
             .ToArrayAsync();
-        
+
         return Page();
     }
 
@@ -40,27 +40,24 @@ public class ChoicesModel : PageModel
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            return await OnGetAsync();
-        }
-        
+        if (!ModelState.IsValid) return await OnGetAsync();
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        var existingUserDiets = await _context.UsersDiets
+
+        var existingUserDiets = await _context.ApplicationUsersDiets
             .Where(ud => ud.ApplicationUserId == userId)
             .ToListAsync();
 
-        _context.UsersDiets.RemoveRange(existingUserDiets);
+        _context.ApplicationUsersDiets.RemoveRange(existingUserDiets);
 
         foreach (var dietId in SelectedDiets)
         {
-            var userDiet = new UserDiet
+            var userDiet = new ApplicationUserDiet
             {
                 ApplicationUserId = userId!,
                 DietId = dietId
             };
-            _context.UsersDiets.Add(userDiet);
+            _context.ApplicationUsersDiets.Add(userDiet);
         }
 
         await _context.SaveChangesAsync();

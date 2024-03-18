@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using PROJET.Model;
 
 namespace PROJET.Pages.Recipes;
 
+[Authorize]
 public class DetailsModel(ApplicationDbContext context) : PageModel
 {
     public Recipe Recipe { get; set; } = default!;

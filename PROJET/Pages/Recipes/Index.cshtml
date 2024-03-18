@@ -12,7 +12,7 @@
     <a asp-page="../Diets/Choices">Choices</a>
 </p>
 
-@foreach (var diet in Model.Diets.Where(d => d.RecipesCout > 0))
+@foreach (var diet in Model.Diets.Where(diet => Model.RecipesDiets.Any(rd => rd.Value.Any(d => d.Id == diet.Id))))
 {
     <h2>@diet.Name</h2>
     <table class="table">
@@ -25,17 +25,17 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var recipeDiets in Model.RecipesDiets.Where(recipeDiets => recipeDiets.Value.Any(d => d.Id == diet.Id)))
-    {
-        <tr>
-            <td>@recipeDiets.Key.Name</td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@recipeDiets.Key.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@recipeDiets.Key.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@recipeDiets.Key.Id">Delete</a>
-            </td>
-        </tr>
-    }
-    </tbody>
+        @foreach (var recipeDiets in Model.RecipesDiets.Where(rd => rd.Value.Any(d => d.Id == diet.Id)))
+        {
+            <tr>
+                <td>@recipeDiets.Key.Name</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@recipeDiets.Key.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@recipeDiets.Key.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@recipeDiets.Key.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
     </table>
 }
