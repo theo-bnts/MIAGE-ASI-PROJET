@@ -21,6 +21,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<ApplicationUserDiet> ApplicationUsersDiets { get; set; } = default!;
 
+    public DbSet<Activity> Activies { get; set; } = default!;
+
+    public DbSet<ActivityGroup> ActivityGroups { get; set; } = default!;
+
+    public DbSet<ApplicationUserActivity> ApplicationUserActivities { get; set; } = default!;
+    
+    public DbSet<PROJET.Model.SocioProfessionalCategory> SocioProfessionalCategory { get; set; } = default!;
+
+    public DbSet<PROJET.Model.Mood> Mood { get; set; } = default!;
+
+    public DbSet<PROJET.Model.ApplicationUserSocioProfessionalCategory> ApplicationUserSocioProfessionalCategory { get; set; } = default!;
+
+    public DbSet<PROJET.Model.RefMood> RefMood { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -38,12 +52,4 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(d => d.RecipesDiet)
             .HasForeignKey(rd => rd.DietId);
     }
-
-public DbSet<PROJET.Model.SocioProfessionalCategory> SocioProfessionalCategory { get; set; } = default!;
-
-public DbSet<PROJET.Model.Mood> Mood { get; set; } = default!;
-
-public DbSet<PROJET.Model.ApplicationUserSocioProfessionalCategory> ApplicationUserSocioProfessionalCategory { get; set; } = default!;
-
-public DbSet<PROJET.Model.RefMood> RefMood { get; set; } = default!;
 }
