@@ -1,0 +1,75 @@
+﻿@page
+@model PROJET.Pages.Moods.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+@if (Model.Etape == "Choix")
+{
+    <form method="post">
+
+        <div class="form-group">
+
+            <label>Choix Catégorie : </label>
+            <select name="ChoixCategorie" class="form-control">
+                <option value="">Choisir une catégorie</option>
+                @foreach (var categorie in Model.Categories)
+                {
+                    <option value="@categorie.Id">@categorie.Name</option>
+                }
+            </select>
+            <!-- <span asp-validation-for="Test" class="text-danger"></span> -->
+            <div class="form-group">
+                <input type="submit" value="Charger les humeurs de cette catégorie" asp-page-handler="ChargerStatistiques" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </form>
+}
+
+@if (Model.Etape == "Visualisation")
+{
+    <div>
+        <h4>Humeur</h4>
+        <hr />
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h3>Content</h3>
+                    </th>
+                    <th>
+                        <h3>Mitigé</h3>
+                    </th>
+                    <th>
+                        <h3>Triste</h3>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <h3>  @Model.Moyenne_Content % </h3>
+                    </td>
+                    <td>
+                        <h3>   @Model.Moyenne_Mitige % </h3>
+                    </td>
+                    <td>
+                        <h3>  @Model.Moyenne_Triste % </h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+}
+
+<div>
+    <a asp-page="./Index">Liste Humeur</a>
+</div>

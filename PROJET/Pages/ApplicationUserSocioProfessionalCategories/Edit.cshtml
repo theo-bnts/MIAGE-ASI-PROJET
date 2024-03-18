@@ -1,0 +1,36 @@
+﻿@page
+@model PROJET.Pages.ApplicationUserSocioProfessionalCategories.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Mon profil : </h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ApplicationUserSocioProfessionalCategory.Id" />
+            <div class="form-group">
+                <!--<label asp-for="Emploi.LutilisateurID" class="control-label"></label>-->
+                <input type="hidden" asp-for="ApplicationUserSocioProfessionalCategory.ApplicationUserId" class="form-control" value="@ViewData["LutilisateurID"]" />
+                <!--  <span asp-validation-for="Emploi.LutilisateurID" class="text-danger"></span>-->
+            </div>
+            <div class="form-group">
+                <label>Choix Catégorie : </label>
+                <select asp-for="ApplicationUserSocioProfessionalCategory.SocioProfessionalCategoryId" class="form-control" asp-items="ViewBag.LaCategorieID"></select>
+                <span asp-validation-for="ApplicationUserSocioProfessionalCategory.SocioProfessionalCategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sauvegarder" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
