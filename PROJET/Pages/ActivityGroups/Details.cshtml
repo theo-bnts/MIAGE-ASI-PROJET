@@ -1,0 +1,86 @@
+﻿@page
+@model PROJET.Pages.ActivityGroups.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ActivityGroup</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ActivityGroup.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ActivityGroup.Name)
+        </dd>
+    </dl>
+</div>
+
+@if (Model.ActivityGroup.Activities.Any())
+{
+    <div>
+        <h4>Activities</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var activity in Model.ActivityGroup.Activities)
+                {
+                    <tr>
+                        <td>@activity.Name</td>
+                        <td>@activity.Description</td>
+                        <td>
+                            <a asp-page="/Activities/Edit" asp-route-id="@activity.Id">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+} else
+{
+    <div>
+        <h4>Activities</h4>
+        <p>Aucune activité associée à ce groupe.</p>
+    </div>
+}
+
+<form method="post">
+    <input type="hidden" asp-for="ActivityGroup.Id" />
+    <h2>Associer les utilisateurs au groupe d'activités</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom d'utilisateur</th>
+                <th>Associé</th>
+            </tr>
+        </thead>
+        <tbody>
+            <label asp-for="Users" class="control-label"></label>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        <input type="checkbox" name="associatedUsers" value="@user.Id" @(Model.AssociatedUserIds.Contains(user.Id) ? "checked" : "") />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Mettre à jour les associations</button>
+</form>
+
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.ActivityGroup.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

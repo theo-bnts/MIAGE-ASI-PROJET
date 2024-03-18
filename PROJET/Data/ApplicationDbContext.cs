@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PROJET.Model;
 
@@ -20,6 +20,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<RecipeDiet> RecipesDiets { get; set; } = default!;
 
     public DbSet<ApplicationUserDiet> ApplicationUsersDiets { get; set; } = default!;
+
+    public DbSet<Activity> Activies { get; set; } = default!;
+
+    public DbSet<ActivityGroup> ActivityGroups { get; set; } = default!;
+
+    public DbSet<ApplicationUserActivity> ApplicationUserActivities { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
