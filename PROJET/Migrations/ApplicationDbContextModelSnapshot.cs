@@ -3,24 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PROJET.Data;
 
 #nullable disable
 
-namespace PROJET.Data.Migrations
+namespace PROJET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240312225255_Initial and Recipe")]
-    partial class InitialandRecipe
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -162,6 +159,49 @@ namespace PROJET.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PROJET.Model.Activity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivityGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityGroupId");
+
+                    b.ToTable("Activies");
+                });
+
+            modelBuilder.Entity("PROJET.Model.ActivityGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActivityGroups");
+                });
+
             modelBuilder.Entity("PROJET.Model.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -227,6 +267,30 @@ namespace PROJET.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("PROJET.Model.ApplicationUserActivity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivityGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityGroupId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("ApplicationUserActivities");
+                });
+
             modelBuilder.Entity("PROJET.Model.ApplicationUserDiet", b =>
                 {
                     b.Property<int>("Id")
@@ -251,6 +315,28 @@ namespace PROJET.Data.Migrations
                     b.ToTable("ApplicationUsersDiets");
                 });
 
+            modelBuilder.Entity("PROJET.Model.ApplicationUserSocioProfessionalCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SocioProfessionalCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SocioProfessionalCategoryId");
+
+                    b.ToTable("ApplicationUserSocioProfessionalCategory");
+                });
+
             modelBuilder.Entity("PROJET.Model.Diet", b =>
                 {
                     b.Property<int>("Id")
@@ -266,6 +352,38 @@ namespace PROJET.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Diets");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Mood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ApplicationUserSocioProfessionalCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RefMoodId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserSocioProfessionalCategoryId");
+
+                    b.HasIndex("RefMoodId");
+
+                    b.ToTable("Mood");
                 });
 
             modelBuilder.Entity("PROJET.Model.Recipe", b =>
@@ -311,6 +429,40 @@ namespace PROJET.Data.Migrations
                     b.HasIndex("DietId");
 
                     b.ToTable("RecipesDiets");
+                });
+
+            modelBuilder.Entity("PROJET.Model.RefMood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RefMood");
+                });
+
+            modelBuilder.Entity("PROJET.Model.SocioProfessionalCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SocioProfessionalCategory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -364,6 +516,36 @@ namespace PROJET.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PROJET.Model.Activity", b =>
+                {
+                    b.HasOne("PROJET.Model.ActivityGroup", "ActivityGroup")
+                        .WithMany("Activities")
+                        .HasForeignKey("ActivityGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActivityGroup");
+                });
+
+            modelBuilder.Entity("PROJET.Model.ApplicationUserActivity", b =>
+                {
+                    b.HasOne("PROJET.Model.ActivityGroup", "ActivityGroup")
+                        .WithMany()
+                        .HasForeignKey("ActivityGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PROJET.Model.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActivityGroup");
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("PROJET.Model.ApplicationUserDiet", b =>
                 {
                     b.HasOne("PROJET.Model.ApplicationUser", "ApplicationUser")
@@ -381,6 +563,40 @@ namespace PROJET.Data.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Diet");
+                });
+
+            modelBuilder.Entity("PROJET.Model.ApplicationUserSocioProfessionalCategory", b =>
+                {
+                    b.HasOne("PROJET.Model.SocioProfessionalCategory", "SocioProfessionalCategory")
+                        .WithMany()
+                        .HasForeignKey("SocioProfessionalCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SocioProfessionalCategory");
+                });
+
+            modelBuilder.Entity("PROJET.Model.Mood", b =>
+                {
+                    b.HasOne("PROJET.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PROJET.Model.ApplicationUserSocioProfessionalCategory", null)
+                        .WithMany("ListMoods")
+                        .HasForeignKey("ApplicationUserSocioProfessionalCategoryId");
+
+                    b.HasOne("PROJET.Model.RefMood", "RefMood")
+                        .WithMany("Moods")
+                        .HasForeignKey("RefMoodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RefMood");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PROJET.Model.Recipe", b =>
@@ -413,6 +629,16 @@ namespace PROJET.Data.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("PROJET.Model.ActivityGroup", b =>
+                {
+                    b.Navigation("Activities");
+                });
+
+            modelBuilder.Entity("PROJET.Model.ApplicationUserSocioProfessionalCategory", b =>
+                {
+                    b.Navigation("ListMoods");
+                });
+
             modelBuilder.Entity("PROJET.Model.Diet", b =>
                 {
                     b.Navigation("RecipesDiet");
@@ -421,6 +647,11 @@ namespace PROJET.Data.Migrations
             modelBuilder.Entity("PROJET.Model.Recipe", b =>
                 {
                     b.Navigation("RecipeDiets");
+                });
+
+            modelBuilder.Entity("PROJET.Model.RefMood", b =>
+                {
+                    b.Navigation("Moods");
                 });
 #pragma warning restore 612, 618
         }
