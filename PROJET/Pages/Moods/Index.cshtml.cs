@@ -12,7 +12,7 @@ using PROJET.ViewModels;
 
 namespace PROJET.Pages.Moods
 {
-    [Authorize(Roles = "ADMINISTRATEUR")]
+    //[Authorize(Roles = "ADMINISTRATEUR")]
     public class IndexModel : PageModel
     {
         private readonly PROJET.Data.ApplicationDbContext _context;
@@ -27,7 +27,7 @@ namespace PROJET.Pages.Moods
 
         public List<MoodsOfUsers> MoodsOfUsers { get; set; }
 
-        public IList<Mood> Mood { get;set; } = default!;
+        public IList<Mood> Mood { get; set; } = default!;
 
         public IList<SocioProfessionalCategory> Categories { get; set; }
 
