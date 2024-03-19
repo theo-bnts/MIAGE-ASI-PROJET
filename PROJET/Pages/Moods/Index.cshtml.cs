@@ -12,7 +12,7 @@ using PROJET.ViewModels;
 
 namespace PROJET.Pages.Moods
 {
-    [Authorize(Roles = "ADMINISTRATEUR")]
+    //[Authorize(Roles = "ADMINISTRATEUR")]
     public class IndexModel : PageModel
     {
         private readonly PROJET.Data.ApplicationDbContext _context;

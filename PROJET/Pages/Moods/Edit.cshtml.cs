@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PROJET.Data;
+using PROJET.Data.Migrations;
 using PROJET.Model;
 
 namespace PROJET.Pages.Moods
@@ -57,13 +58,15 @@ namespace PROJET.Pages.Moods
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+
             var existingHumeur = await _context.Mood.FirstOrDefaultAsync(h =>
                 h.ApplicationUserId == Mood.ApplicationUserId &&
                 h.Date == Mood.Date);
 
+            Console.WriteLine(Mood.Date);
+
             if (existingHumeur != null)
             {
-                // _context.Entry(existingHumeur).CurrentValues.SetValues(Humeur);
                 existingHumeur.RefMoodId = Mood.RefMoodId;
             }
             else
@@ -87,7 +90,7 @@ namespace PROJET.Pages.Moods
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Edit");
         }
 
         private bool MoodExists(string id, DateTime humeur)
