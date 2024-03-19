@@ -47,7 +47,7 @@ public class DetailsModel : PageModel
 
         return RedirectToPage(new { id = id });
     }
-    
+
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null)
@@ -65,7 +65,11 @@ public class DetailsModel : PageModel
         }
 
         Activities = ActivityGroup.Activities.ToList();
-        Users = await _context.Users.ToListAsync();
+
+        Users = await _context.Users
+            .Where(u => !_context.UserRoles.Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { ur.UserId, r.Name })
+            .Any(ur => ur.UserId == u.Id && ur.Name == "ADMINISTRATEUR"))
+            .ToListAsync();
 
         AssociatedUserIds = await _context.ApplicationUserActivities
             .Where(ua => ua.ActivityGroupId == id)
@@ -75,3 +79,4 @@ public class DetailsModel : PageModel
         return Page();
     }
 }
+
