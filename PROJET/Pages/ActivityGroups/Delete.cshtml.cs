@@ -26,11 +26,15 @@ public class DeleteModel : PageModel
             return NotFound();
         }
 
-        ActivityGroup = await _context.ActivityGroups.FirstOrDefaultAsync(m => m.Id == id);
+        var ActivityGroup = await _context.ActivityGroups.FirstOrDefaultAsync(m => m.Id == id);
 
         if (ActivityGroup == null)
         {
             return NotFound();
+        } 
+        else
+        {
+            this.ActivityGroup = ActivityGroup;
         }
         return Page();
     }
@@ -41,9 +45,20 @@ public class DeleteModel : PageModel
             return NotFound();
         }
 
-        ActivityGroup = await _context.ActivityGroups.FindAsync(id);
+        var ActivityGroup = await _context.ActivityGroups.FindAsync(id);
 
-        if (ActivityGroup != null)
+        if (ActivityGroup == null)
+        {
+            return NotFound();
+        }
+
+        bool isUsed = _context.Activies.Any(a => a.ActivityGroupId == id);
+
+        if (isUsed)
+        {
+            return RedirectToPage("./Index");
+        }
+        else
         {
             _context.ActivityGroups.Remove(ActivityGroup);
             await _context.SaveChangesAsync();

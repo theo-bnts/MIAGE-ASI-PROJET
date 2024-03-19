@@ -21,6 +21,14 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
+        if (User.IsInRole("ADMINISTRATEUR"))
+        {
+            Activities = await _context.Activies
+                .Include(a => a.ActivityGroup)
+                .ToListAsync();
+            return;
+        }
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         var activityGroupIds = await _context.ApplicationUserActivities
