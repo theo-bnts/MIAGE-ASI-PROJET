@@ -34,9 +34,9 @@ namespace PROJET.Pages.Moods
 
         [BindProperty]
         public int? ChoixCategorie { get; set; }
-        public double Moyenne_Content { get; set; }
-        public double Moyenne_Mitige { get; set; }
-        public double Moyenne_Triste { get; set; }
+        public string Moyenne_Content { get; set; }
+        public string Moyenne_Mitige { get; set; }
+        public string Moyenne_Triste { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -106,14 +106,9 @@ namespace PROJET.Pages.Moods
                     total++;
                 }
 
-
-                Moyenne_Content = (total_content / total) * 100;
-                Moyenne_Mitige = (total_mitige / total) * 100;
-                Moyenne_Triste = (total_triste / total) * 100;
-
-                Console.WriteLine(Moyenne_Content);
-                Console.WriteLine(Moyenne_Mitige);
-                Console.WriteLine(Moyenne_Triste);
+                Moyenne_Content = String.Format("{0:0.00}", (total_content / total) * 100);
+                Moyenne_Mitige = String.Format("{0:0.00}", (total_mitige / total) * 100);
+                Moyenne_Triste = String.Format("{0:0.00}", (total_triste / total) * 100);
 
                 Etape = "Visualisation";
 

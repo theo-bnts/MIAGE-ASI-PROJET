@@ -27,7 +27,7 @@ namespace PROJET.Pages.Moods
 
         public List<MoodsOfUsers> MoodsOfUsers { get; set; }
 
-        public IList<Mood> Mood { get;set; } = default!;
+        public IList<Mood> Mood { get; set; } = default!;
 
         public IList<SocioProfessionalCategory> Categories { get; set; }
 
